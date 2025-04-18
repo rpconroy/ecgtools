@@ -219,6 +219,7 @@ class Builder:
         name: str,
         path_column_name: str,
         variable_column_name: str,
+        format_column_name: str = None,
         data_format: DataFormat,
         groupby_attrs: typing.Optional[typing.List[str]] = None,
         aggregations: typing.Optional[typing.List[Aggregation]] = None,
@@ -281,14 +282,22 @@ class Builder:
             groupby_attrs=groupby_attrs,
             aggregations=aggregations,
         )
-
-        cat = ESMCatalogModel(
-            esmcat_version=esmcat_version,
-            description=description,
-            attributes=attributes,
-            aggregation_control=_aggregation_control,
-            assets=Assets(column_name=path_column_name, format=data_format),
-        )
+        if format_column_name is None:
+            cat = ESMCatalogModel(
+                esmcat_version=esmcat_version,
+                description=description,
+                attributes=attributes,
+                aggregation_control=_aggregation_control,
+                assets=Assets(column_name=path_column_name, format=data_format),
+            )
+        else:
+            cat = ESMCatalogModel(
+                esmcat_version=esmcat_version,
+                description=description,
+                attributes=attributes,
+                aggregation_control=_aggregation_control,
+                assets=Assets(column_name=path_column_name,  format_column_name=format_column_name),
+            )
 
         cat._df = self.df
 
